@@ -1,52 +1,55 @@
-# 守望先锋 Alt+A 防截图冲突脚本
+# 守望先锋 × 微信：别让 Alt+A 截图打断游戏
 
-只在 **守望先锋处于前台** 时临时屏蔽 `Alt+A`，避免游戏过程中触发微信截图。切到桌面或其他程序时放行，使用第二个 BAT 可以彻底停止保护。
+玩守望先锋时，微信也经常挂在后台。选威能要用 Alt 配合左右键，另一只手还在按着移动键。如果这时 A 没有松开，就容易碰上微信默认的截图快捷键 **Alt+A**：截图框突然弹出来，游戏卡一下，操作也被打断。
 
-适用于 Windows 10 / 11。无需安装新软件，不分发 EXE，不修改注册表或微信配置。由系统自带的 Windows PowerShell 在后台运行。
+这个脚本就是为这个小麻烦写的。玩之前双击开启，守望先锋在前台时临时拦住 Alt+A；切出去回消息、看浏览器时，微信截图照常用。打完再双击恢复，不用每次改微信快捷键，也不用为了玩游戏关掉微信。
 
-> **使用限制：**拦截的是 `Alt+A` 组合本身，游戏也可能收不到其中的 A 按下事件。如果你需要在游戏中同时使用 Alt 和 A，请先在练习场测试。尚未完成真实守望先锋与微信同时运行时的兼容性验证。
+## 怎么用
 
-## 快速使用
+在仓库页面点 **Code → Download ZIP**，把压缩包完整解压。日常只用下面两个文件：
 
-1. 在仓库页面点击 **Code → Download ZIP**，完整解压到可写文件夹。
-2. 打开微信，双击根目录的 **`01_关闭游戏内截图快捷键.bat`**。
-3. 看到“已开启”后进入游戏，等待约 1 秒让脚本识别游戏进程。
-4. 游戏结束后双击 **`02_恢复截图快捷键.bat`**，看到“已恢复”即可。
-
-| 文件 | 作用 |
+| 文件 | 什么时候用 |
 | --- | --- |
-| [01_关闭游戏内截图快捷键.bat](01_关闭游戏内截图快捷键.bat) | 开启前台游戏保护；这里“关闭”指屏蔽截图组合键 |
-| [02_恢复截图快捷键.bat](02_恢复截图快捷键.bat) | 停止后台脚本并卸载本工具的拦截 |
-| [使用与修复教程.txt](使用与修复教程.txt) | 自检、失效排查、权限问题、强制恢复和移除方法 |
+| [01_关闭游戏内截图快捷键.bat](01_关闭游戏内截图快捷键.bat) | 微信打开后、进游戏前双击，开启临时屏蔽 |
+| [02_恢复截图快捷键.bat](02_恢复截图快捷键.bat) | 玩完双击，停止脚本、恢复正常输入 |
 
-两个 BAT 都是独立脚本，正常使用无需下载额外的源码依赖。命令窗口会自动关闭，保护脚本会继续在后台运行；它不会设置开机启动。重启或注销后保护自动结束。
+看到“已开启”后，窗口自动关闭是正常的，脚本会在后台继续运行。游戏刚启动时等约 1 秒，再试一下。切到桌面或微信时不必先关脚本，Alt+A 会自动放行。
 
-## 生效范围
+适用于 Windows 10 / 11，使用系统自带的 Windows PowerShell。无需安装额外软件，也不提供 EXE。没有开机启动，重启或注销后就会停止，下次玩时再开。
 
-- 默认只识别 `Overwatch.exe`，且只在该进程的窗口处于前台时拦截。
-- 支持按前台进程识别窗口、无边框和全屏游戏，不会屏蔽其他全屏应用。
-- 单独的 A、单独的 Alt、Alt+Tab、Alt+F4 不在屏蔽规则中。
-- Ctrl / Shift / Windows 键参与的其他组合不在屏蔽规则中。
-- 重复开启不会叠加实例。需要重新安装拦截时，请先恢复再开启。
-- 恢复脚本只停止本工具，不退出游戏、微信或其他 PowerShell 任务。
+## 哪些时候会拦截
 
-## 失效时先这样做
+脚本只认 **前台窗口所属的 `Overwatch.exe`**。窗口、无边框、全屏都按同一个规则处理：正在操作守望先锋时拦截，切到其他程序就放行。游戏只是挂在后台时，不会占住你的截图快捷键。
 
-先运行恢复 BAT，再在微信已打开的情况下运行开启 BAT，回到游戏等待约 1 秒。
+目前只处理 Alt+A。单独按 A、单独按 Alt、Alt+Tab，以及带 Ctrl、Shift 或 Windows 键的其他组合，都不在屏蔽范围内。重复双击开启不会多开；恢复脚本也只会停止本工具。
 
-如果游戏使用管理员权限，可用相同权限运行两个 BAT。游戏进程改名、脚本无法启动或恢复失败时，按[完整修复教程](使用与修复教程.txt)处理。不要为修复本脚本删除注册表项，它没有写入持久键盘映射。
+## 先在练习场试一下
 
-## 工作方式
+保持微信开启，运行第一个 BAT，然后按你平时的操作顺序试一次：**先按住 A 移动，再按 Alt，并配合左右键选择威能**。看看截图还会不会弹出，也确认移动和选择操作是否正常。松开按键、切到桌面后，再试一次微信截图。
 
-BAT 内嵌 PowerShell 与 C# 源码，通过 `Add-Type` 加载 Windows 键盘钩子。后台每 500 毫秒刷新游戏进程列表；收到 A 键事件时检查当前前台进程。
+这里有个需要说清楚的地方：脚本拦截的是 **Alt+A 这组按键本身**，没有单独修改微信的截图功能。先按住 A 再按 Alt 时，已经放行的 A 按下事件会保留，对应的松开也会放行；如果先按 Alt 再按 A，游戏可能收不到 A 的按下事件。这两种顺序都建议试一下。如果影响你的游戏操作，双击恢复即可。
 
-按下和松开事件会配对处理：如果 A 的按下已经放行，就继续放行对应的松开，避免切换窗口或改变修饰键后留下错误的按键状态。
+按键规则和脚本检查已经通过，但还没有完成真实守望先锋与微信同时运行时的兼容性测试，所以这里不把“所有情况下都不影响操作”当成保证。
 
-脚本不读写游戏内存、不注入游戏进程、不模拟按键，也不记录输入文字。日志仅包含生命周期、错误信息和拦截次数，写在开启 BAT 所在文件夹中。
+## 突然不生效了怎么办
 
-参考：[LowLevelKeyboardProc](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc)、[KBDLLHOOKSTRUCT](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)、[UnhookWindowsHookEx](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)。
+通常先试一遍：**恢复 → 确认微信已打开 → 重新开启 → 回游戏等约 1 秒**。这样会重新安装本工具的按键拦截。
 
-## 目录
+如果游戏是以管理员身份运行的，脚本也可能需要用相同权限运行。窗口闪退、游戏进程改名、恢复失败等情况，在 [使用与修复教程](使用与修复教程.txt) 里有具体步骤。
+
+日志保存在开启 BAT 同目录的 `运行日志.txt`，只记录启动、停止、错误和拦截次数，不记录聊天内容或输入文字。反馈问题时，附上错误信息和按键顺序就很有帮助。
+
+## 为什么用 BAT，没写注册表
+
+注册表里的常见单键映射不能表达“只在守望先锋前台时屏蔽 Alt+A”。为了保留切出游戏就能截图的行为，这里用 BAT 启动一个临时的 PowerShell 后台脚本，通过 Windows 键盘钩子判断是否拦截。
+
+它不修改注册表或微信配置，不读写游戏内存、不注入游戏进程，也不模拟按键。想移除时先运行恢复，再删掉文件夹即可。
+
+---
+
+## 想看源码或自己改
+
+两个 BAT 已经内嵌了运行所需的 PowerShell 和 C# 代码。普通使用只需下载、解压、双击；下面这些文件是留给想看实现或修改规则的人：
 
 ```text
 .
@@ -54,20 +57,20 @@ BAT 内嵌 PowerShell 与 C# 源码，通过 `Add-Type` 加载 Windows 键盘钩
 ├── 02_恢复截图快捷键.bat
 ├── 使用与修复教程.txt
 ├── src/
-│   ├── AltAGuard.cs          # 拦截规则与 Windows 钩子
+│   ├── AltAGuard.cs          # 按键规则与 Windows 钩子
 │   ├── start-payload.ps1    # 启动、单实例控制和日志
-│   └── stop-payload.ps1     # 请求退出并确认恢复
+│   └── stop-payload.ps1     # 停止后台脚本
 ├── tools/
-│   ├── Build.ps1           # 从源码生成两个独立 BAT
+│   ├── Build.ps1            # 从源码生成两个 BAT
 │   └── Test-Distribution.ps1
 ├── tests/
 │   └── Test-KeyFilter.ps1   # 43 项按键规则检查
 └── .github/workflows/check.yml
 ```
 
-## 开发与验证
+后台每 500 毫秒刷新游戏进程列表，在收到 A 键事件时检查当前前台进程。A 的按下、松开会配对处理，避免切换窗口或松开 Alt 后留下错误的按键状态。
 
-在仓库根目录执行：
+在仓库根目录执行以下命令，可以重新生成脚本并检查：
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Build.ps1
@@ -75,10 +78,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\Test-KeyFilter.p
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Test-Distribution.ps1
 ```
 
-修改功能时编辑 `src/`，随后重新生成根目录的 BAT，并一并提交。BAT 使用无 BOM 的 UTF-8 和 CRLF 换行；PowerShell 源文件保留 UTF-8 BOM，兼容 Windows PowerShell 5.1。执行参数仅影响当前 PowerShell 进程，不永久改变系统执行策略。
+修改功能时编辑 `src/`，再重新生成 BAT，一起提交。BAT 使用无 BOM 的 UTF-8 和 CRLF 换行；PowerShell 源文件保留 UTF-8 BOM，兼容 Windows PowerShell 5.1。`-ExecutionPolicy Bypass` 只影响这一次进程，不永久修改系统策略。
 
-GitHub Actions 配置为在 Windows 上运行逻辑检查与分发脚本检查，不会启动后台键盘保护。
+GitHub Actions 会在 Windows 上检查按键规则和分发文件，不会启动后台键盘拦截。已有的验证包括 43 项按键规则，以及开启、重复开启、停止、重复停止。它们能检查脚本逻辑，实际游戏中的表现仍要自己试一下。
 
-交付前已通过 43 项按键逻辑检查，以及开启、重复开启、停止、重复停止检查。自动测试不能代替实际游戏兼容性测试，请按教程在练习场自检。
-
-提交问题时，可描述 Windows 版本、游戏进程名称、运行权限、复现步骤和错误信息。不要上传账号信息或无关的完整系统日志。
+实现参考：[LowLevelKeyboardProc](https://learn.microsoft.com/en-us/windows/win32/winmsg/lowlevelkeyboardproc)、[KBDLLHOOKSTRUCT](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)、[UnhookWindowsHookEx](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)。
